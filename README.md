@@ -1,18 +1,51 @@
-# VPS Debian Buster for Django + VueJS
-Debian, PostgreSQL, 
+# Настройка VPS для Django/Nuxt
 
-# Debian 10 
-Создание нового пользователя:
++ Настройка системы
+  + Создание пользователя
+  + Настройка шелл
+  + Установка зависимостей
++ PostgreSQL
+  + Установка из репозитория
+  + Создание пользователя и базы данных
+  + Восстановление из дампа
+  + Создание резервного дампа 
+  + Установка панели управления ( серверная )
++ MySQL
+  + Установка из репозитория
+  + Создание пользователя и базы данных
+  + Восстановление из дампа
+  + Создание резервного дампа 
++ Django
+  + Создание виртуальной среды
+  + Установка зависимостей пректа
+  + Сбор статики и создание директорий
++ Gunicorn
+  + Конфигурирование сокета
+  + Запуск и управление
++ NodeJS
+  + Установка сервера
+  + Установка зависимостей и сборка проекта
++ PM2
+  + Запуск и управление проектом
++ Nginx
+  + Конфигурация для Django
+  + Конфигурация для Nuxt
+  + Управление
++ Firewall (UFW)
+  + Установка и настройка
+  + Управление
+
+
+## Настройка пользователя и окружения
+
+### Создание нового пользователя:
 ```
 adduser anon
 usermod -aG sudo anon
 su anon
 ```
-Установка пакетов:
-```
-sudo apt install nginx python3-venv python3-pip python3-dev libpq-dev build-essential
-```
-Настройка SSH:
+
+### Запрещаем root по ssh:
 ```
 sudo nano /etc/ssh/sshd_config
     PermitRootLogin no
@@ -20,8 +53,67 @@ sudo nano /etc/ssh/sshd_config
 sudo service ssh restart
 ```
 
-# UFW
-Настройка файрвола: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-debian-9-ru
+### Установка зависимостей:
+```
+sudo apt install python3-venv python3-pip python3-dev libpq-dev build-essential
+```
+
+
+## PostgreSQL
+
+### Установка: 
+> https://www.postgresql.org/download/linux/debian/
+
+```
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt-get -y install postgresql
+```
+
+### Создание базы данных и пользователя:
+```
+sudo -u postgres psql
+
+CREATE DATABASE home_project;
+CREATE USER home_project WITH PASSWORD 'password';
+
+ALTER ROLE myprojectuser SET client_encoding TO 'utf8';
+ALTER ROLE myprojectuser SET default_transaction_isolation TO 'read committed';
+ALTER ROLE myprojectuser SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;
+
+\q
+```
+
+### Создание/Восстановление данных из дампа:
+```
+sudo -u postgres pg_dump database > db.sql
+sudo -u postgres psql -d newdatabase -f db.sql
+```
+
+## Разворачивание Django приложения
+
+### Клонирование и установка зависимостей приложения:
+```
+git clone https://github.com/login/repository.git
+cd repository
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Создание/Восстановление данных из JSON:
+
+
+====================================================================================================
+
+
+
+
+
+## Установка и настройка Firewall (UFW)
+
+> https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-debian-9-ru
 ```
 sudo apt install ufw
 
@@ -34,6 +126,24 @@ sudo ufw enable
 sudo ufw status
 sudo ufw status verbose
 ```
+
+
+
+
+
+
+
+
+
+
+
+Установка пакетов:
+```
+sudo apt install nginx python3-venv python3-pip python3-dev libpq-dev build-essential
+```
+
+
+
 
 
 ```

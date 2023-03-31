@@ -71,6 +71,14 @@ sudo apt-get update
 sudo apt-get -y install postgresql
 ```
 
+### Восстановление миграций Django
+```bash
+python manage.py dbshell
+TRUNCATE django_migrations;
+python manage.py migrate --fake
+```
+
+
 ### Создание базы данных и пользователя:
 ```
 sudo -u postgres psql

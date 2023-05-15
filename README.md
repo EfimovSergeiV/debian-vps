@@ -299,6 +299,8 @@ sudo ufw allow 'Nginx Full'
 server {
     listen 80;
     server_name sitename.ru www.sitename.ru;
+    
+    client_max_body_size 3G;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {

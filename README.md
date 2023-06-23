@@ -404,12 +404,12 @@ cd /usr/share/elasticsearch/bin # ElasticSearch applications
 
 ```bash
 sudo apt install wireguard
-wg genkey | sudo tee /etc/wireguard/privatekey | wg pubkey | sudo tee /etc/wireguard/publickey # e9Aad86/x3ez7YxPozpI5k41YIjy1GhLCG/ttCirTVM=
+wg genkey | sudo tee /etc/wireguard/privatekey | wg pubkey | sudo tee /etc/wireguard/publickey
 sudo chmod 600 /etc/wireguard/privatekey
 
 ip a
 
-sudo cat /etc/wireguard/privatekey # CFWlb15UAbaJnNO5wV3IUVir0syex/BjaOTqzJQ3XVU=
+sudo cat /etc/wireguard/privatekey
 
 sudo nano /etc/wireguard/wg0.conf
 [Interface]
@@ -431,7 +431,7 @@ sudo systemctl enable wg-quick@wg0.service
 sudo systemctl start wg-quick@wg0.service
 sudo systemctl status wg-quick@wg0.service
 
-wg genkey | sudo tee /etc/wireguard/anon_privatekey | wg pubkey | sudo tee /etc/wireguard/anon_publickey # JSkiH39wBQ0s1Bpchz9lN9iZIwww8DFse6VbDd2T6ks=
+wg genkey | sudo tee /etc/wireguard/anon_privatekey | wg pubkey | sudo tee /etc/wireguard/anon_publickey
 
 sudo nano /etc/wireguard/wg0.conf
 [Peer]

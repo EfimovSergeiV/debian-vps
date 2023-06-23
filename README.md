@@ -387,3 +387,73 @@ deactivate
 ```
 
 # Управление VueJS проектом
+
+
+# ElasticSearch with Kibana
+
+```bash
+sudo systemctl start elasticsearch
+
+cd /usr/share/elasticsearch/bin # ElasticSearch applications
+
+
+```
+
+
+# WireGuard VPN
+
+```bash
+sudo apt install wireguard
+wg genkey | sudo tee /etc/wireguard/privatekey | wg pubkey | sudo tee /etc/wireguard/publickey # e9Aad86/x3ez7YxPozpI5k41YIjy1GhLCG/ttCirTVM=
+sudo chmod 600 /etc/wireguard/privatekey
+
+ip a
+
+sudo cat /etc/wireguard/privatekey # CFWlb15UAbaJnNO5wV3IUVir0syex/BjaOTqzJQ3XVU=
+
+sudo nano /etc/wireguard/wg0.conf
+[Interface]
+PrivateKey = <privatekey>
+Address = 10.0.0.1/24
+ListenPort = 51830
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+sudo nano /etc/sysctl.conf
+net.ipv4.ip_forward=1
+net.ipv6.conf.all.forwarding=1
+
+sudo sysctl -p
+
+sudo ufw allow 51820/udp
+
+sudo systemctl enable wg-quick@wg0.service
+sudo systemctl start wg-quick@wg0.service
+sudo systemctl status wg-quick@wg0.service
+
+wg genkey | sudo tee /etc/wireguard/anon_privatekey | wg pubkey | sudo tee /etc/wireguard/anon_publickey # JSkiH39wBQ0s1Bpchz9lN9iZIwww8DFse6VbDd2T6ks=
+
+sudo nano /etc/wireguard/wg0.conf
+[Peer]
+PublicKey = <anon_publickey>
+AllowedIPs = 10.0.0.2/32
+
+sudo systemctl restart wg-quick@wg0 
+sudo systemctl status wg-quick@wg0
+
+
+CLIENT:
+
+nano anon_wb.conf
+[Interface]
+PrivateKey = <CLIENT-PRIVATE-KEY>
+Address = 10.0.0.2/32
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = <SERVER-PUBKEY>
+Endpoint = <SERVER-IP>:51830
+AllowedIPs = 0.0.0.0/0
+PersistentKeepalive = 20
+
+```

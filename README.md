@@ -83,13 +83,12 @@ python manage.py migrate --fake
 ```
 sudo -u postgres psql
 
-CREATE DATABASE home_project;
-CREATE USER home_project WITH PASSWORD 'password';
-
-ALTER ROLE myprojectuser SET client_encoding TO 'utf8';
-ALTER ROLE myprojectuser SET default_transaction_isolation TO 'read committed';
-ALTER ROLE myprojectuser SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;
+create database name_db;
+create user name_user with password 'password';
+alter role name_user set client_encoding TO 'utf8';
+alter role name_user set default_transaction_isolation to 'read committed';
+alter role name_user set timezone to 'UTC';
+grant all PRIVILEGES ON DATABASE name_db to name_user;
 
 \q
 ```
@@ -395,8 +394,9 @@ deactivate
 sudo systemctl start elasticsearch
 
 cd /usr/share/elasticsearch/bin # ElasticSearch applications
-
-
+sudo nano /etc/elasticsearch/elasticsearch.yml
+sudo service elasticsearch start
+sudo service elasticsearch status
 ```
 
 

@@ -304,7 +304,14 @@ server {
     
     client_max_body_size 3G;
 
-    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /favicon.ico {
+        alias /home/anon/cw-dapp/files/favicon.ico;
+    }
+
+    location = /robots.txt {  
+        alias /home/anon/cw-dapp/files/robots.txt;
+    }
+
     location /static/ {
         root /home/anon/szwei-django;
     }

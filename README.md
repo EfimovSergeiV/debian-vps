@@ -485,6 +485,7 @@ sudo service elasticsearch status
 
 
 # WireGuard VPN
+# https://github.com/Nyr/wireguard-install решение попроще
 
 ```bash
 sudo apt install wireguard
@@ -499,7 +500,7 @@ sudo nano /etc/wireguard/wg0.conf
 [Interface]
 PrivateKey = <privatekey>
 Address = 10.0.0.1/24
-ListenPort = 51830
+ListenPort = 51820
 PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 
@@ -536,7 +537,7 @@ DNS = 8.8.8.8
 
 [Peer]
 PublicKey = <SERVER-PUBKEY>
-Endpoint = <SERVER-IP>:51830
+Endpoint = <SERVER-IP>:51820
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 20
 

@@ -542,3 +542,33 @@ AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 20
 
 ```
+
+
+### Установка сервера outline
+
+```text
+https://github.com/Jigsaw-Code
+https://gist.github.com/JohnyDeath/3f93899dc78f90cc57ae52b41ea29bac
+```
+
+```bash
+sudo curl https://get.docker.com | sh
+sudo wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh | sudo bash
+
+sudo ufw allow 39885/tcp
+sudo ufw allow 1586/tcp
+sudo ufw allow 1586/udp
+
+=================================================================================
+If you have connection problems, it may be that your router or cloud provider
+blocks inbound connections, even though your machine seems to allow them.
+
+Make sure to open the following ports on your firewall, router or cloud provider:
+- Management port 33055, for TCP
+- Access key port 62162, for TCP and UDP
+
+```
+#### ОФФ
+```bash
+sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"
+```

@@ -36,17 +36,6 @@
   + Управление
 
 
-
-# Наводим красоту
-```bash
-sudo hostnamectl set-hostname mail.your-domain.com
-sudo nano /etc/hosts
-127.0.0.1       mail.your-domain.com localhost
-hostname -f
-
-```
-
-
 ## Настройка пользователя и окружения
 
 ### Создание нового пользователя:
@@ -180,7 +169,7 @@ sudo ufw status verbose
 ```
 
 
-# PostgreSQL
+<!-- # PostgreSQL
 Установка: https://www.postgresql.org/download/linux/debian/ 
 ```
 sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -202,16 +191,77 @@ ALTER ROLE myprojectuser SET default_transaction_isolation TO 'read committed';
 ALTER ROLE myprojectuser SET timezone TO 'UTC';
 
 GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;
-# или
-ALTER DATABASE name_db OWNER TO name_user;
-
 \q
 
 .....
 su - postgres
 createdb --encoding UNICODE dbms_db --username postgres
 exit
+``` -->
+
+# PostgreSQL
+
+Manual: https://www.postgresql.org/download/linux/debian/
+
+```bash
+sudo apt install postgresql-common
+sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh
+sudo apt install postgresql
 ```
+
+```bash
+sudo -u postgres psql
+
+create database name_db;
+create user name_user with password 'password';
+alter role name_user set client_encoding TO 'utf8';
+alter role name_user set default_transaction_isolation to 'read committed';
+alter role name_user set timezone to 'UTC';
+# grant all PRIVILEGES ON DATABASE name_db to name_user;
+ALTER DATABASE name_db OWNER TO name_user;
+
+\q
+```
+
+
+# ElasticSearch with Kibana
+
+```bash
+# sudo systemctl start elasticsearch
+
+# cd /usr/share/elasticsearch/bin # ElasticSearch applications
+# sudo nano /etc/elasticsearch/elasticsearch.yml
+
+# sudo nano /etc/elasticsearch/jvm.options
+
+# sudo service elasticsearch start
+# sudo service elasticsearch status
+```
+
+```bash
+pip install elasticsearch-dsl
+pip install django-elasticsearch-dsl
+
+
+sudo nano /etc/elasticsearch/elasticsearch.yml
+
+# Enable security features
+xpack.security.enabled: false
+
+
+
+/etc/elasticsearch/jvm.options
+
+# Xms represents the initial size of total heap space
+# Xmx represents the maximum size of total heap space
+
+-Xms128m
+-Xmx128m
+
+sudo systemctl restart elasticsearch.service
+sudo systemctl enable elasticsearch.service
+```
+
 
 
 # MySQL
@@ -267,18 +317,17 @@ gunicorn --bind 0.0.0.0:8000 main.wsgi
 sudo service gunicorn restart
 
 sudo nano /etc/systemd/system/gunicorn.socket
-    [Unit]
-    Description=gunicorn socket
+[Unit]
+Description=gunicorn socket
 
-    [Socket]
-    ListenStream=/run/gunicorn.sock
+[Socket]
+ListenStream=/run/gunicorn.sock
 
-    [Install]
-    WantedBy=sockets.target
+[Install]
+WantedBy=sockets.target
 
 
 sudo nano /etc/systemd/system/gunicorn.service
-
 [Unit]
 Description=gunicorn daemon
 Requires=gunicorn.socket
@@ -296,6 +345,11 @@ ExecStart=/home/sammy/myprojectdir/myprojectenv/bin/gunicorn \
 
 [Install]
 WantedBy=multi-user.target
+
+
+sudo systemctl daemon-reload
+sudo systemctl enable gunicorn.service
+
 ```
 
 # NGINX
@@ -460,15 +514,35 @@ sudo certbot --nginx -d your_domain -d www.your_domain
 
 # NodeJS
 Установка:
+```bash
+# curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+# sudo bash nodesource_setup.sh
+# sudo apt install nodejs
+
+
+
+
+# installs nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+# download and install Node.js (you may need to restart the terminal)
+nvm install 20
+# verifies the right Node.js version is in the environment
+node -v # should print `v20.16.0`
+# verifies the right npm version is in the environment
+npm -v # should print `10.8.1`
 ```
-curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
-sudo bash nodesource_setup.sh
-sudo apt install nodejs
+
+# PNPM
+```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+# or
+wget -qO- https://get.pnpm.io/install.sh | sh -
 ```
+
 
 # PM2
 Запуск VueJS приложения:
-```
+```bash
 sudo npm install pm2 -g
 pm2 start npm -- start
 pm2 restart 0
@@ -485,17 +559,6 @@ deactivate
 
 # Управление VueJS проектом
 
-
-# ElasticSearch with Kibana
-
-```bash
-sudo systemctl start elasticsearch
-
-cd /usr/share/elasticsearch/bin # ElasticSearch applications
-sudo nano /etc/elasticsearch/elasticsearch.yml
-sudo service elasticsearch start
-sudo service elasticsearch status
-```
 
 
 # WireGuard VPN
@@ -558,118 +621,31 @@ PersistentKeepalive = 20
 ```
 
 
-### Установка сервера Outline
-
-```bash
-# Install docker https://docs.docker.com/engine/install/debian/#install-using-the-repository
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  
-```
-```bash
-sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-# Install outline (link from Outline Manager)
-sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"
-
-#Make sure to open the following ports on your firewall, router or cloud provider:
-#- Management port 23986, for TCP
-#- Access key port 10029, for TCP and UDP
-sudo ufw allow 23986/tcp
-sudo ufw allow 10029/tcp
-sudo ufw allow 10029/udp
-```
-
-
-
-
-## Mattermost
+### Установка сервера outline
 
 ```text
-Настройка Postgresql
-https://docs.mattermost.com/install/prepare-mattermost-database.html
-Установка на дебиан
-https://docs.mattermost.com/install/install-debian.html
-Корректируем из мана под юбунту
-https://docs.mattermost.com/install/install-ubuntu.html
-Настройка прокси NGINX
-https://docs.mattermost.com/install/setup-nginx-proxy.html
-(Местный сертбот из этого мана потом юзаем)
-Upgrade mm тоже по этому ману успешный
-https://docs.mattermost.com/upgrade/upgrading-mattermost-server.html
+https://github.com/Jigsaw-Code
+https://gist.github.com/JohnyDeath/3f93899dc78f90cc57ae52b41ea29bac
 ```
 
-
 ```bash
-psql (16.2 (Debian 16.2-1.pgdg120+2))
-Type "help" for help.
+sudo curl https://get.docker.com | sh
+sudo wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh | sudo bash
 
-postgres=# CREATE DATABASE mattermost;
-CREATE DATABASE
-postgres=# CREATE USER mmuser WITH PASSWORD 'mmuser-password';
-CREATE ROLE
-postgres=# GRANT ALL PRIVILEGES ON DATABASE mattermost to mmuser;
-GRANT
-postgres=# ALTER DATABASE mattermost OWNER TO mmuser;
-ALTER DATABASE
-postgres=# GRANT USAGE, CREATE ON SCHEMA PUBLIC TO mmuser;
-GRANT
-postgres=# \q
+sudo ufw allow 39885/tcp
+sudo ufw allow 1586/tcp
+sudo ufw allow 1586/udp
 
-#######
-sudo systemctl restart postgresql-{version}
-```
+=================================================================================
+If you have connection problems, it may be that your router or cloud provider
+blocks inbound connections, even though your machine seems to allow them.
 
-
-```bash
-/etc/postgresql/{version}/main/postgresql.conf
-# Find the following line: #listen_addresses = 'localhost'
-# Uncomment the line and change localhost to *: listen_addresses = '*'
-# Restart PostgreSQL for the change to take effect by running:
-sudo systemctl restart postgresql-{version}
-
-
-
-
-/etc/postgresql/{version}/main/pg_hba.conf
-
-
-local   all             all                        peer
-
-host    all             all         ::1/128        ident
-
-###
-
-local   all             all                        trust
-
-host    all             all         ::1/128        trust
-
-
-sudo systemctl reload postgresql-{version}
-psql --dbname=mattermost --username=mmuser --password
+Make sure to open the following ports on your firewall, router or cloud provider:
+- Management port 33055, for TCP
+- Access key port 62162, for TCP and UDP
 
 ```
-
-
+#### ОФФ
 ```bash
-wget https://releases.mattermost.com/9.5.3/mattermost-9.5.3-linux-amd64.tar.gz 
-tar -xvzf mattermost*.gz
-sudo mv mattermost /opt
-
-sudo mkdir /opt/mattermost/data
-sudo useradd --system --user-group mattermost
-sudo chown -R mattermost:mattermost /opt/mattermost
-sudo chmod -R g+w /opt/mattermost
-sudo touch /lib/systemd/system/mattermost.service
-sudo nano /lib/systemd/system/mattermost.service
-sudo cp /opt/mattermost/config/config.json /opt/mattermost/config/config.defaults.json
-sudo nano /opt/mattermost/config/config.json                                          
-
-sudo systemctl start mattermost
+sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"
 ```

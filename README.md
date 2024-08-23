@@ -618,6 +618,13 @@ Endpoint = <SERVER-IP>:51820
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = 20
 
+
+# Debian client
+sudo apt install wireguard resolvconf
+sudo nano /etc/wireguard/wg0.conf
+sudo systemctl restart wg-quick@wg0
+sudo systemctl enable wg-quick@wg0.service
+
 ```
 
 

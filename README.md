@@ -45,13 +45,55 @@ usermod -aG sudo anon
 su anon
 ```
 
-### Запрещаем root по ssh:
-```
+### Наводим секьюрность
+```bash
+
+# Запрещаем root по ssh меняем порт:
 sudo nano /etc/ssh/sshd_config
-    PermitRootLogin no
+
+  PermitRootLogin no
+  Port 23
 
 sudo service ssh restart
+
+
+# Fail2ban для блокировки брутфорс-атак
+sudo apt update
+sudo apt install fail2ban
+
+sudo nano /etc/fail2ban/jail.local
+
+[sshd]
+enabled = true
+port = 14500  # Укажите ваш SSH-порт, если вы изменили его
+maxretry = 5
+bantime = 600  # 10 минут блокировки после 5 неудачных попыток
+findtime = 600
+
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+sudo fail2ban-client status sshd
+
+# Ограничение числа подключений с помощью UFW
+
+sudo ufw limit 14500/tcp
+
+
+# Установка 2FA
+
+sudo apt install libpam-google-authenticator
+google-authenticator
+sudo nano /etc/pam.d/sshd
+auth required pam_google_authenticator.so
+sudo nano /etc/ssh/sshd_config
+ChallengeResponseAuthentication yes
+sudo systemctl restart ssh
+
+
 ```
+
+
 
 ### Установка зависимостей:
 ```

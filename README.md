@@ -669,6 +669,29 @@ sudo systemctl enable wg-quick@wg0.service
 
 ```
 
+# Second WireGuard tunnel
+```bash
+nano /etc/wireguard/wg1.conf
+
+[Interface]
+PrivateKey = <PrivateKey2>
+Address = 10.0.1.1/24
+ListenPort = 51821
+
+[Peer]
+PublicKey = <PublicKey2>
+Endpoint = <Server2_IP>:51821
+AllowedIPs = 0.0.0.0/0
+
+sudo wg-quick up wg1
+
+# Для проверки запущенных туннелей
+sudo wg
+
+# Автоконнект
+sudo systemctl enable wg-quick@wg1
+```
+
 
 ### Установка сервера outline
 

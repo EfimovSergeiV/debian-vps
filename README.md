@@ -696,6 +696,7 @@ sudo systemctl enable wg-quick@wg1
 ### Установка сервера outline
 
 ```text
+(В ИНТЕРФЕЙСЕ МЕНЕДЖЕРА ЕСТЬ ИНСТРУКЦИЯ)
 https://github.com/Jigsaw-Code
 https://gist.github.com/JohnyDeath/3f93899dc78f90cc57ae52b41ea29bac
 ```

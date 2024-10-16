@@ -722,3 +722,152 @@ Make sure to open the following ports on your firewall, router or cloud provider
 ```bash
 sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"
 ```
+
+
+### MatterMost
+
+```bash
+# Подготовка базы данных
+nano /etc/postgresql/{version}/main/postgresql.conf
+
+# listen_addresses = '*'
+sudo systemctl restart postgresql
+
+
+nano /etc/postgresql/9.4/main/pg_hba.conf
+# from
+local   all             all                        peer
+host    all             all         ::1/128        ident
+# to
+local   all             all                        trust
+host    all             all         ::1/128        trust
+
+sudo systemctl reload postgresql
+
+
+# CREATE DB mattermost:mmuser<mmuser-password>
+
+# Получаем последнюю версию
+wget https://releases.mattermost.com/10.0.1/mattermost-10.0.1-linux-amd64.tar.gz
+
+tar -xvzf mattermost*.gz
+sudo mv mattermost /opt
+sudo mkdir /opt/mattermost/data
+sudo useradd --system --user-group mattermost
+
+
+sudo chown -R mattermost:mattermost /opt/mattermost
+sudo chmod -R g+w /opt/mattermost
+
+sudo nano /lib/systemd/system/mattermost.service
+
+```
+
+```text
+[Unit]
+Description=Mattermost
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/opt/mattermost/bin/mattermost
+TimeoutStartSec=3600
+KillMode=mixed
+Restart=always
+RestartSec=10
+WorkingDirectory=/opt/mattermost
+User=mattermost
+Group=mattermost
+LimitNOFILE=49152
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo cp /opt/mattermost/config/config.json /opt/mattermost/config/config.defaults.json
+sudo nano /opt/mattermost/config/config.json
+# "postgres://mmuser:<mmuser-password>@<host-name-or-IP>:5432/mattermost?sslmode=disable&connect_timeout=10"
+
+sudo systemctl start mattermost
+curl http://localhost:8065
+sudo systemctl enable mattermost.service
+
+
+sudo cat /etc/nginx/sites-enabled/mattermost
+```
+
+```text
+upstream backend {
+    server localhost:8065;
+    keepalive 32;
+    }
+
+server {
+    server_name domainname.ru www.domainname.ru;
+
+    location ~ /api/v[0-9]+/(users/)?websocket$ {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        client_max_body_size 50M;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Frame-Options SAMEORIGIN;
+        proxy_buffers 256 16k;
+        proxy_buffer_size 16k;
+        client_body_timeout 60s;
+        send_timeout 300s;
+        lingering_timeout 5s;
+        proxy_connect_timeout 90s;
+        proxy_send_timeout 300s;
+        proxy_read_timeout 90s;
+        proxy_pass http://localhost:8065;
+    }
+
+    location / {
+        client_max_body_size 50M;
+        proxy_set_header Connection "";
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Frame-Options SAMEORIGIN;
+        proxy_buffers 256 16k;
+        proxy_buffer_size 16k;
+        proxy_read_timeout 600s;
+        proxy_http_version 1.1;
+        proxy_pass http://localhost:8065;
+    }
+}
+
+```
+
+
+
+```bash
+
+
+
+```
+
+```bash
+
+
+
+```
+
+
+```bash
+
+
+
+```
+
+
+```bash
+
+
+
+```

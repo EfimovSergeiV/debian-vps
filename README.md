@@ -841,33 +841,69 @@ server {
         proxy_pass http://localhost:8065;
     }
 }
+```
 
+
+
+### Установка NFS-сервера
+
+```bash
+sudo apt update
+sudo apt install nfs-kernel-server
+
+# systemctl start nfs-server
+# systemctl enable nfs-server
+```
+
+```bash
+sudo mkdir -p /mnt/shared
+
+sudo chown nobody:nogroup /mnt/shared
+sudo chmod 777 /mnt/shared
+```
+
+```bash
+sudo nano /etc/exports
+/mnt/shared 192.168.1.0/24(rw,sync,no_subtree_check)
+
+# /mnt/shared — путь к каталогу, который вы расшариваете.
+# 192.168.1.0/24 — сеть, которая имеет доступ к ресурсу.
+# rw — разрешение на чтение и запись.
+# sync — синхронная запись (гарантирует, что изменения сразу записываются на диск).
+# no_subtree_check — отключает проверку подкаталогов (ускоряет работу).
+```
+
+```bash
+sudo exportfs -a
+
+# systemctl restart nfs-server
+sudo systemctl restart nfs-kernel-server
+
+sudo ufw allow from 192.168.1.0/24 to any port nfs
+sudo ufw allow from 192.168.1.0/24 to any port 111
+```
+
+
+```bash
+# Подключение с клиента
+
+sudo apt update
+sudo apt install nfs-common
+
+sudo mount 192.168.1.10:/mnt/shared /mnt
+
+
+# nano /etc/fstab
+192.168.1.10:/mnt/shared /mnt nfs defaults 0 0
 ```
 
 
 
 ```bash
+# WIHTIG
 
-
-
-```
-
-```bash
-
-
-
-```
-
-
-```bash
-
-
-
-```
-
-
-```bash
-
+# Делать миграции данных от пользователя
+sudo su - mattermost
 
 
 ```

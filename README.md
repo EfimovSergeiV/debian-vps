@@ -881,6 +881,16 @@ sudo systemctl restart nfs-kernel-server
 
 sudo ufw allow from 192.168.1.0/24 to any port nfs
 sudo ufw allow from 192.168.1.0/24 to any port 111
+
+# На сервере тоже лучше завести аналогичного пользователя
+sudo groupadd -g 1030 mattermost
+sudo useradd -u 1020 -g 1030 mattermost
+
+# Просмотр пользователей
+cat /etc/passwd
+
+# Просмотр групп
+cat /etc/group
 ```
 
 
@@ -891,7 +901,6 @@ sudo apt update
 sudo apt install nfs-common
 
 sudo mount 192.168.1.10:/mnt/shared /mnt
-
 
 # nano /etc/fstab
 192.168.1.10:/mnt/shared /mnt nfs defaults 0 0

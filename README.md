@@ -936,3 +936,36 @@ ssh — выполняет подключение по SSH к удаленном
 ps aux | grep "ssh -p 22 -f -C2qTnN -D 1080 root@serv"
 kill <PID>
 ```
+
+
+```bash
+sudo nano /etc/gdm3/greeter.dconf-defaults
+
+# Automatic suspend
+# =================
+[org/gnome/settings-daemon/plugins/power]
+# - Time inactive in seconds before suspending with AC power
+#   1200=20 minutes, 0=never
+# sleep-inactive-ac-timeout=1200
+# - What to do after sleep-inactive-ac-timeout
+#   'blank', 'suspend', 'shutdown', 'hibernate', 'interactive' or 'nothing'
+sleep-inactive-ac-type='nothing'
+# - As above but when on battery
+# sleep-inactive-battery-timeout=1200
+sleep-inactive-battery-type='nothing'
+
+```
+
+
+```bash
+sudo cat /etc/fstab              
+
+#//192.168.60.248/storage-t/ /home/user/STORAGE-T/ cifs credentials=/home/user/.access.txt,uid=1000,gid=1000 0 0
+
+cat .access.txt 
+
+username=user
+password=123456
+
+
+```

@@ -901,6 +901,7 @@ sudo apt update
 sudo apt install nfs-common
 
 sudo mount 192.168.1.10:/mnt/shared /mnt
+# sudo mount 10.0.0.4:/STORAGE-2 /opt/mattermost/storage
 
 # nano /etc/fstab
 192.168.1.10:/mnt/shared /mnt nfs defaults 0 0

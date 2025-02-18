@@ -969,4 +969,25 @@ username=user
 password=123456
 
 
+### Компиляция Python из исходников
+
+```bash
+
+sudo apt update && sudo apt install -y build-essential libssl-dev \
+  zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl \
+  llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev \
+  liblzma-dev python3-openssl git
+
+cd /usr/src
+sudo wget https://www.python.org/ftp/python/X.Y.Z/Python-X.Y.Z.tgz
+sudo tar xvf Python-X.Y.Z.tgz
+cd Python-X.Y.Z
+sudo ./configure --enable-optimizations
+sudo make -j$(nproc)
+
+# Важно: Используйте make altinstall, а не make install, чтобы не перезаписать python3
+sudo make altinstall
+
+pythonX.Y --version
+
 ```

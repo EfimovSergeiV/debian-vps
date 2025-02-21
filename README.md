@@ -991,3 +991,59 @@ sudo make altinstall
 pythonX.Y --version
 
 ```
+
+
+### Docker
+
+```bash
+# Добавление пользователя в группу Docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Установить контейнер
+sudo docker pull ubuntu:16.04
+
+# Список контейнеров
+sudo docker ps -a
+
+
+# Запуск/ перезапуск контейнера
+sudo docker start ubuntu16
+sudo docker exec -it ubuntu16 /bin/bash
+
+
+# Удалить контейнер
+sudo docker rm ubuntu16
+
+
+# Посмотреть список образов
+sudo docker images
+
+# Создать новый конттейнер из образа
+sudo docker run -it --name new_ubuntu16 ubuntu:16.04 /bin/bash
+
+# 
+# 
+# 
+# 
+# 
+# 
+
+```
+
+
+================
+
+```bash
+
+sudo apt install mysql-server
+sudo service mysql start
+pip install --trusted-host pypi.python.org --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.tx
+
+
+scp ./tehnosvar.sql ./local_settings.py ./media.tar.gz anon@172.17.0.2:/home/anon/tehnosvar-app
+
+
+libmysqlclient-dev
+
+```

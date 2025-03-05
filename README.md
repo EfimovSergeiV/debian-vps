@@ -38,6 +38,17 @@
 
 ## Настройка пользователя и окружения
 
+```bash
+# SET HOSTNAME
+
+sudo hostnamectl set-hostname mail.your-domain.com
+sudo nano /etc/hosts
+127.0.0.1       mail.your-domain.com localhost
+hostname -f
+
+```
+
+
 ### Создание нового пользователя:
 ```
 adduser anon

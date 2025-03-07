@@ -1057,4 +1057,9 @@ scp ./tehnosvar.sql ./local_settings.py ./media.tar.gz anon@172.17.0.2:/home/ano
 
 libmysqlclient-dev
 
+
+
+# СРАБОТАЛО, НО ФАЙЛЫ В КОНТЕЙНЕРЕ ПРОПАЛИ
+docker run -it -p 8000:8000 -v $(pwd):/tehnosvar-app --name tehnosvar-app tehnosvar-app bash
+
 ```

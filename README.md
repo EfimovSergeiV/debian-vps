@@ -54,6 +54,11 @@ hostname -f
 adduser anon
 usermod -aG sudo anon
 su anon
+
+
+sudo visudo
+# Defaults env_reset => Defaults env_reset,pwfeedback
+
 ```
 
 ### Наводим секьюрность
@@ -107,7 +112,7 @@ sudo systemctl restart ssh
 
 
 ### Установка зависимостей:
-```
+```zsh
 sudo apt install python3-venv python3-pip python3-dev libpq-dev build-essential
 ```
 
@@ -596,9 +601,18 @@ wget -qO- https://get.pnpm.io/install.sh | sh -
 # PM2
 Запуск VueJS приложения:
 ```bash
-sudo npm install pm2 -g
+
+npm install pm2 -g 
+
 pm2 start npm -- start
 pm2 restart 0
+
+
+# Автозапуск, вернёт команду
+pm2 startup
+# run app
+pm2 start ecosystem.config.cjs --watch
+
 ```
 
 

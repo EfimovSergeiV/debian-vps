@@ -1077,3 +1077,11 @@ libmysqlclient-dev
 docker run -it -p 8000:8000 -v $(pwd):/tehnosvar-app --name tehnosvar-app tehnosvar-app bash
 
 ```
+
+```zsh
+# Отключить засыпание, если разлогинен.
+sudo nano /etc/gdm3/greeter.dconf-defaults
+
+
+
+```

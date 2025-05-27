@@ -1087,7 +1087,7 @@ sudo nano /etc/gdm3/greeter.dconf-defaults
 ```zsh
 # GIT
 
-#…or create a new repository on the command line
+# create a new repository on the command line
 echo "# exx" >> README.md
 git init
 git add README.md
@@ -1097,7 +1097,6 @@ git remote add origin https://github.com/GLSVAR-KZ/exx.git
 git push -u origin main
 
 #…or push an existing repository from the command line
-
 git remote add origin https://github.com/GLSVAR-KZ/exx.git
 git branch -M main
 git push -u origin main

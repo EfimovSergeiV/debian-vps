@@ -1102,3 +1102,38 @@ git branch -M main
 git push -u origin main
 
 ```
+
+
+```zsh
+# VirtualBox
+sudo usermod -a -G vboxusers $USER
+```
+
+
+```zsh
+# Custom
+sudo nano /etc/fstab
+
+UUID=462F325C5EF028C8   /STORE/HDD0   ntfs  defaults,uid=1000,gid=1000,umask=0022 0 2
+UUID=730CE51142710AB7   /STORE/HDD1   ntfs  defaults,uid=1000,gid=1000,umask=0022 0 2
+```
+
+
+
+```txt
+Windows Server - Общий доступ
+
+Откройте services.msc и убедитесь, что запущены следующие службы:
+
+DNS Client
+Function Discovery Resource Publication
+SSDP Discovery
+UPnP Device Host
+Если у вас русскоязычная версия, то службы называются так:
+
+DNS-клиент
+Публикация ресурсов обнаружения функций
+Обнаружение SSDP
+Узел универсальных PnP
+
+```

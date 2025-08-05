@@ -1018,9 +1018,58 @@ pythonX.Y --version
 ```
 
 
+---
+
+
+### Conda + ZSH + OhMyZSH
+```bash
+# https://www.anaconda.com/download/success
+# curl -O https://repo.anaconda.com/archive/Anaconda3-2025.06-0-Linux-x86_64.sh
+
+chmod +x Anaconda3-2025.06-0-Linux-x86_64.sh
+./Anaconda3-2025.06-0-Linux-x86_64.sh
+conda config --set changeps1 False            # Пофиксим терминал
+
+
+# Создание нового окружения
+conda create --name myenv python=3.7  # Создать с конкретной версией Python
+conda create --name myenv python=3.7 package1 package2  # С указанием пакетов
+
+# To activate this environment, use
+conda activate myenv
+
+# To deactivate an active environment, use
+conda deactivate
+
+# Просмотр списка окружений
+conda env list
+# или
+conda info --envs
+
+# Удаление окружения
+conda remove --name myenv --all  # Полное удаление
+conda env remove --name myenv    # Альтернативный вариант
+```
+
+
+---
+
+
 ### Docker
 
 ```bash
+# STATUS
+nvidia-smi
+
+# INSTALL
+https://docs.docker.com/engine/install/ubuntu/
+https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+
+
+# CHECK GPU
+docker run --rm --gpus all nvidia/cuda:11.0-base nvidia-smi
+
+
 # Добавление пользователя в группу Docker
 sudo usermod -aG docker $USER
 newgrp docker
